@@ -16,6 +16,9 @@ import { InquiryModule } from './modules/inquiry/inquiry.module';
 import { HajjInquiryModule } from './modules/hajj-inquiry/hajj-inquiry.module';
 import { ShiftingHajjPackageModule } from './modules/shifting-hajj-package/shifting-hajj-package.module';
 import { NonShiftingHajjPackageModule } from './modules/non-shifting-hajj-package/non-shifting-hajj-package.module';
+import { UmrahPackagesModule } from './modules/umrah-package/umrah-package.module';
+import { GroupFamilyPackagesModule } from './modules/group-family-package/group-family-package.module';
+import { PricingPackageModule } from './modules/pricing-package/pricing-package.module';
 
 @Module({
   imports: [
@@ -37,6 +40,9 @@ import { NonShiftingHajjPackageModule } from './modules/non-shifting-hajj-packag
     HajjInquiryModule,
     ShiftingHajjPackageModule,
     NonShiftingHajjPackageModule,
+    UmrahPackagesModule,
+    GroupFamilyPackagesModule,
+    PricingPackageModule,
   ],
   controllers: [],
   providers: [

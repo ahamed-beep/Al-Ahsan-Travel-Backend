@@ -25,10 +25,8 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
-      forbidNonWhitelisted: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
+      forbidNonWhitelisted: false,
+    
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
         const messages = errors.map((error) => ({

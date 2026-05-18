@@ -10,7 +10,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { ShiftingHajjPackageStatus } from '../enums/shifting-hajj-package.enum';
+import { ShiftingHajjPackageStatus, ShiftingHajjPackageTag } from '../enums/shifting-hajj-package.enum';
 
 export class CreateShiftingHajjPackageDto {
   @IsString()
@@ -27,12 +27,14 @@ export class CreateShiftingHajjPackageDto {
   @Min(1)
   durationNights: number;
 
-  // multipart: "Makkah,Madinah" string ya array dono handle
   @IsOptional()
   @Transform(({ value }) => {
     if (!value) return [];
     if (Array.isArray(value)) return value;
-    return String(value).split(',').map((v: string) => v.trim()).filter(Boolean);
+    return String(value)
+      .split(',')
+      .map((v: string) => v.trim())
+      .filter(Boolean);
   })
   @IsArray()
   @IsString({ each: true })
@@ -42,11 +44,17 @@ export class CreateShiftingHajjPackageDto {
   @Transform(({ value }) => {
     if (!value) return [];
     if (Array.isArray(value)) return value;
-    return String(value).split(',').map((v: string) => v.trim()).filter(Boolean);
+    return String(value)
+      .split(',')
+      .map((v: string) => v.trim())
+      .filter(Boolean);
   })
   @IsArray()
-  @IsString({ each: true })
-  tags?: string[];
+  @IsEnum(ShiftingHajjPackageTag, {
+    each: true,
+    message: `Each tag must be one of: ${Object.values(ShiftingHajjPackageTag).join(', ')}`,
+  })
+  tags?: ShiftingHajjPackageTag[];
 
   @Type(() => Number)
   @IsNumber()

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { ShiftingHajjPackageStatus } from '../enums/shifting-hajj-package.enum';
+import { ShiftingHajjPackageStatus, ShiftingHajjPackageTag } from '../enums/shifting-hajj-package.enum';
 
 export type ShiftingHajjPackageDocument = ShiftingHajjPackage & Document;
 
@@ -18,8 +18,12 @@ export class ShiftingHajjPackage {
   @Prop({ type: [String], default: [] })
   locations: string[];
 
-  @Prop({ type: [String], default: [] })
-  tags: string[];
+  @Prop({
+    type: [String],
+    enum: Object.values(ShiftingHajjPackageTag),
+    default: [],
+  })
+  tags: ShiftingHajjPackageTag[];
 
   @Prop({ required: true, min: 0 })
   price: number;
@@ -39,8 +43,12 @@ export class ShiftingHajjPackage {
   @Prop({ default: false })
   popular: boolean;
 
-  @Prop({ enum: ShiftingHajjPackageStatus, default: ShiftingHajjPackageStatus.ACTIVE })
+  @Prop({
+    enum: ShiftingHajjPackageStatus,
+    default: ShiftingHajjPackageStatus.ACTIVE,
+  })
   status: ShiftingHajjPackageStatus;
 }
 
-export const ShiftingHajjPackageSchema = SchemaFactory.createForClass(ShiftingHajjPackage);
+export const ShiftingHajjPackageSchema =
+  SchemaFactory.createForClass(ShiftingHajjPackage);
