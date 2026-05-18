@@ -10,7 +10,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { NonShiftingHajjPackageStatus } from '../enums/non-shifting-hajj-package.enum';
+import { NonShiftingHajjPackageStatus, NonShiftingHajjPackageTag } from '../enums/non-shifting-hajj-package.enum';
 
 export class CreateNonShiftingHajjPackageDto {
   @IsString()
@@ -44,8 +44,11 @@ export class CreateNonShiftingHajjPackageDto {
     return String(value).split(',').map((v: string) => v.trim()).filter(Boolean);
   })
   @IsArray()
-  @IsString({ each: true })
-  tags?: string[];
+  @IsEnum(NonShiftingHajjPackageTag, {
+    each: true,
+    message: `Each tag must be one of: ${Object.values(NonShiftingHajjPackageTag).join(', ')}`,
+  })
+  tags?: NonShiftingHajjPackageTag[];
 
   @Type(() => Number)
   @IsNumber()

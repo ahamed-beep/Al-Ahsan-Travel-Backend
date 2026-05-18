@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import { ShiftingHajjPackageStatus } from '../enums/shifting-hajj-package.enum';
+import { ShiftingHajjPackageStatus, ShiftingHajjPackageTag } from '../enums/shifting-hajj-package.enum';
 
 export class ShiftingHajjPackageDto {
   @Expose()
@@ -23,7 +23,7 @@ export class ShiftingHajjPackageDto {
   locations: string[];
 
   @Expose()
-  tags: string[];
+  tags: ShiftingHajjPackageTag[];
 
   @Expose()
   price: number;
