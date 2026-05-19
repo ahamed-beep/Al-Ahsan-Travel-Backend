@@ -19,6 +19,8 @@ import { NonShiftingHajjPackageModule } from './modules/non-shifting-hajj-packag
 import { UmrahPackagesModule } from './modules/umrah-package/umrah-package.module';
 import { GroupFamilyPackagesModule } from './modules/group-family-package/group-family-package.module';
 import { PricingPackageModule } from './modules/pricing-package/pricing-package.module';
+import { MonthlyUmrahPackagesModule } from './modules/monthly-umrah-package/monthly-umrah-package.module';
+import { AshraPackagesModule } from './modules/ashra-packages/ashra-packages.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { PricingPackageModule } from './modules/pricing-package/pricing-package.
     UmrahPackagesModule,
     GroupFamilyPackagesModule,
     PricingPackageModule,
+    MonthlyUmrahPackagesModule,
+    AshraPackagesModule,
   ],
   controllers: [],
   providers: [

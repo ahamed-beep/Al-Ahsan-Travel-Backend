@@ -21,10 +21,20 @@ export class SerializeInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> {
     return next.handle().pipe(
-      map((data: unknown) => {
-        return plainToInstance(this.dto, data, {
-          excludeExtraneousValues: true,
-        });
+      map((response: any) => {
+        // Agar { success, message, data } wrapper hai
+        if (response && typeof response === 'object' && 'data' in response) {
+          const serializedData = Array.isArray(response.data)
+            ? response.data.map((item: any) =>
+                plainToInstance(this.dto, item, { excludeExtraneousValues: true })
+              )
+            : plainToInstance(this.dto, response.data, { excludeExtraneousValues: true });
+
+          return { ...response, data: serializedData };
+        }
+
+        // Purana logic — direct object
+        return plainToInstance(this.dto, response, { excludeExtraneousValues: true });
       }),
     );
   }
