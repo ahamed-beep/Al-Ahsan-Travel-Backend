@@ -21,6 +21,9 @@ import { GroupFamilyPackagesModule } from './modules/group-family-package/group-
 import { PricingPackageModule } from './modules/pricing-package/pricing-package.module';
 import { MonthlyUmrahPackagesModule } from './modules/monthly-umrah-package/monthly-umrah-package.module';
 import { AshraPackagesModule } from './modules/ashra-packages/ashra-packages.module';
+import { SpecialPackagesModule } from './modules/special-packages/special-packages.module';
+import { FlightDealsModule } from './modules/flight-deal/flight-deal.module';
+import { ContactModule } from './modules/contact/contact.module';
 
 @Module({
   imports: [
@@ -47,6 +50,9 @@ import { AshraPackagesModule } from './modules/ashra-packages/ashra-packages.mod
     PricingPackageModule,
     MonthlyUmrahPackagesModule,
     AshraPackagesModule,
+    SpecialPackagesModule,
+    FlightDealsModule,
+    ContactModule,
   ],
   controllers: [],
   providers: [

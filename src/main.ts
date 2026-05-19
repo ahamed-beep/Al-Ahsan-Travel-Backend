@@ -19,6 +19,10 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
+  app.useGlobalFilters(
+  new AllExceptionsFilter(configService),  // configService pass karo
+  new HttpExceptionFilter(),
+);
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalPipes(
@@ -26,13 +30,27 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: false,
-    
-      stopAtFirstError: true,
+      stopAtFirstError: false, // sab errors ek saath dekho
+      transformOptions: {
+        enableImplicitConversion: true, // <-- ye missing tha
+      },
       exceptionFactory: (errors) => {
-        const messages = errors.map((error) => ({
-          field: error.property,
-          errors: Object.values(error.constraints || {}),
-        }));
+        // nested errors bhi flatten karo
+        const flatten = (errs: any[], parent = ''): any[] =>
+          errs.flatMap((e) => {
+            const field = parent ? `${parent}.${e.property}` : e.property;
+            const children = e.children?.length
+              ? flatten(e.children, field)
+              : [];
+            const constraints = e.constraints
+              ? [{ field, errors: Object.values(e.constraints) }]
+              : [];
+            return [...constraints, ...children];
+          });
+
+        const messages = flatten(errors);
+        console.error('❌ Validation Errors:', JSON.stringify(messages, null, 2));
+
         return new BadRequestException({
           message: 'Validation failed',
           errors: messages,
