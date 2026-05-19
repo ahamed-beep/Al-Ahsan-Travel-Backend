@@ -24,16 +24,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? (exceptionResponse as { message?: unknown; error?: unknown })
         : null;
 
+    // ← Yeh fix hai — array bhi handle hoga
+    const rawMessage = typeof exceptionResponse === 'string'
+      ? exceptionResponse
+      : responseObj?.message ?? 'An error occurred';
+
+    const message = Array.isArray(rawMessage)
+      ? rawMessage
+      : rawMessage;
+
     const errorResponse = {
       success: false,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,
-      message:
-        typeof exceptionResponse === 'string'
-          ? exceptionResponse
-          : (responseObj?.message as string) || 'An error occurred',
+      message,  // ← Ab array aayega validation errors mein
       error:
         typeof exceptionResponse === 'object'
           ? (responseObj?.error as string)
