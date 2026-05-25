@@ -29,6 +29,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { multerImageOptions } from 'src/shared/cloudinary/multer.config';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { FlightDealsService } from './flight-deal.service';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('flight-deals')
 @SerializeResponse(FlightDealResponseDto)
@@ -77,6 +78,7 @@ async create(
   }
 }
   @Get()
+   @Public()
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() filters: FilterFlightDealDto) {
     try {
@@ -89,6 +91,7 @@ async create(
   }
 
   @Get(':id')
+   @Public()
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: string) {
     try {

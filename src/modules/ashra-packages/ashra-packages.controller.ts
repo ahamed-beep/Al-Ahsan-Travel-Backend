@@ -85,6 +85,7 @@ export class AshraPackagesController {
   }
 
   @Get(':id')
+     @Public()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @RequireRole('admin')
   @SerializeResponse(AshraPackageResponseDto)
