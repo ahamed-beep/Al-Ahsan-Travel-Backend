@@ -23,6 +23,7 @@ import {
 } from './dto/contact.dto';
 import { SerializeResponse } from 'src/common/decorators/serialize.interceptor';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('contact')
 @SerializeResponse(ContactResponseDto)
@@ -32,6 +33,7 @@ export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
   @Post()
+   @Public()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateContactDto) {
     try {
