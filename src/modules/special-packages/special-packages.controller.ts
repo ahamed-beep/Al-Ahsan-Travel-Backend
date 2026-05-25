@@ -28,6 +28,7 @@ import { SerializeResponse } from 'src/common/decorators/serialize.interceptor';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { multerImageOptions } from 'src/shared/cloudinary/multer.config';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('special-packages')
 @SerializeResponse(SpecialPackageResponseDto)
@@ -77,6 +78,7 @@ console.log('isActive raw:', dto.isActive, typeof dto.isActive);
 }
 
   @Get()
+   @Public()
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() filters: FilterSpecialPackageDto) {
     try {
@@ -90,6 +92,7 @@ console.log('isActive raw:', dto.isActive, typeof dto.isActive);
 
 
   @Get('category/:category')
+   @Public()
   @HttpCode(HttpStatus.OK)
   async findByCategory(@Param('category') category: PackageCategory) {
     try {
@@ -103,6 +106,7 @@ console.log('isActive raw:', dto.isActive, typeof dto.isActive);
 
 
   @Get(':id')
+   @Public()
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: string) {
     try {
