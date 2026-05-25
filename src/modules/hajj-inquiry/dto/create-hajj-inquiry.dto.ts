@@ -18,7 +18,7 @@ export class CreateHajjInquiryDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(7)
+  @MinLength(1)
   @MaxLength(20)
   @Transform(({ value }: { value: string }) => value?.trim())
   phoneNumber: string;
