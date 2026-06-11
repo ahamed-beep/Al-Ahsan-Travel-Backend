@@ -15,7 +15,7 @@ import {
 export class CreateContactDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(1)
   @MaxLength(100)
   fullName: string;
 
@@ -25,7 +25,7 @@ export class CreateContactDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
+  @MinLength(1)
   @MaxLength(20)
   phone: string;
 
@@ -35,7 +35,7 @@ export class CreateContactDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
+  @MinLength(1)
   @MaxLength(1000)
   message: string;
 }

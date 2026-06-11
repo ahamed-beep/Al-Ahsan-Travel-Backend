@@ -19,7 +19,7 @@ export class CreateInquiryDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
-  @MaxLength(20)
+  @MaxLength(40)
   @Transform(({ value }: { value: string }) => value?.trim())
   phone: string;
 

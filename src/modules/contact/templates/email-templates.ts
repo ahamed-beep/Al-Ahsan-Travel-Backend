@@ -56,20 +56,13 @@ export const getUserConfirmationEmail = (name: string) => {
           color: #666;
         }
         .button {
-          background: #1C398E;
+          background: #25D366;
           color: white;
           padding: 12px 24px;
           text-decoration: none;
           border-radius: 6px;
           display: inline-block;
           margin: 20px 0;
-        }
-        .social-icons {
-          margin-top: 20px;
-        }
-        .social-icons a {
-          margin: 0 10px;
-          text-decoration: none;
         }
       </style>
     </head>
@@ -92,23 +85,21 @@ export const getUserConfirmationEmail = (name: string) => {
             </p>
           </div>
 
-          <p>In the meantime, you can:</p>
+          <p>In the meantime, you can reach us via:</p>
           <ul>
-            <li>📞 Call us at: <strong>+44 XXX XXX XXX</strong></li>
-            <li>💬 WhatsApp us: <strong>+44 XXX XXX XXX</strong></li>
-            <li>📧 Email us: <strong>info@alahsantravels.com</strong></li>
+            <li>📞 Call us: <a href="tel:+447440064066" style="color: #1C398E;"><strong>+44 7440 064066</strong></a></li>
+            <li>💬 WhatsApp: <a href="https://wa.me/447440064066" style="color: #1C398E;"><strong>+44 7440 064066</strong></a></li>
+            <li>📧 Email: <a href="mailto:info@alahsantravels.co.uk" style="color: #1C398E;"><strong>info@alahsantravels.co.uk</strong></a></li>
+            <li>📍 Office: <strong>156 Great Charles Street, Queensway, Birmingham B3 3HN, United Kingdom</strong></li>
           </ul>
 
           <center>
-            <a href="https://wa.me/447123456789" class="button">📱 Chat on WhatsApp</a>
+            <a href="https://wa.me/447440064066" class="button">💬 Chat on WhatsApp</a>
           </center>
         </div>
         <div class="footer">
-          <p>© 2024 Al-Ahsan Travels. All rights reserved.</p>
-          <p>📍 London, United Kingdom</p>
-          <div class="social-icons">
-            <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
-          </div>
+          <p>© 2025 Al-Ahsan Travels. All rights reserved.</p>
+          <p>📍 156 Great Charles Street, Queensway, Birmingham B3 3HN, United Kingdom</p>
         </div>
       </div>
     </body>
