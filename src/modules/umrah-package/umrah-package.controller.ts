@@ -22,6 +22,7 @@ import { multerImageOptions } from 'src/shared/cloudinary/multer.config';
 import { CreateUmrahPackageDto } from './dto/create-umrah-package.dto';
 import { UmrahPackageFilterDto } from './dto/umrah-package-filter.dto';
 import { UpdateUmrahPackageDto } from './dto/update-umrah-package.dto';
+import { UpdateUmrahPackageFeaturesDto } from './dto/update-umrah-package-features.dto';
 
 @Controller('umrah-packages')
 @SerializeResponse(UmrahPackageResponseDto)
@@ -65,6 +66,15 @@ export class UmrahPackagesController {
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.umrahPackagesService.update(id, updateUmrahPackageDto, file);
+  }
+
+  @Patch(':id/features')
+  @RequireRole('admin')
+  async updateFeatures(
+    @Param('id') id: string,
+    @Body() dto: UpdateUmrahPackageFeaturesDto,
+  ) {
+    return this.umrahPackagesService.updateFeatures(id, dto);
   }
 
   @Delete(':id')

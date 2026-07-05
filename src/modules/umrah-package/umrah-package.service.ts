@@ -10,7 +10,10 @@ import { UmrahPackageCategory } from './enums/umrah-package.enum';
 import { UpdateUmrahPackageDto } from './dto/update-umrah-package.dto';
 import { UmrahPackageFilterDto } from './dto/umrah-package-filter.dto';
 import { CreateUmrahPackageDto } from './dto/create-umrah-package.dto';
+import { UpdateUmrahPackageFeaturesDto } from './dto/update-umrah-package-features.dto';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+
+const toBool = (v: unknown) => v === true || v === 'true';
 
 @Injectable()
 export class UmrahPackagesService {
@@ -39,6 +42,12 @@ export class UmrahPackagesService {
 
       const umrahPackage = new this.umrahPackageModel({
         ...createUmrahPackageDto,
+        includesFlight: toBool(createUmrahPackageDto.includesFlight),
+        includesVisa: toBool(createUmrahPackageDto.includesVisa),
+        includesTransport: toBool(createUmrahPackageDto.includesTransport),
+        includesGuide: toBool(createUmrahPackageDto.includesGuide),
+        isVip: toBool(createUmrahPackageDto.isVip),
+        isCustom: toBool(createUmrahPackageDto.isCustom),
         imageUrl,
         imagePublicId,
       });
@@ -111,12 +120,55 @@ export class UmrahPackagesService {
 
       Object.assign(umrahPackage, updateUmrahPackageDto);
 
+      if (updateUmrahPackageDto.includesFlight !== undefined)
+        umrahPackage.includesFlight = toBool(updateUmrahPackageDto.includesFlight);
+      if (updateUmrahPackageDto.includesVisa !== undefined)
+        umrahPackage.includesVisa = toBool(updateUmrahPackageDto.includesVisa);
+      if (updateUmrahPackageDto.includesTransport !== undefined)
+        umrahPackage.includesTransport = toBool(updateUmrahPackageDto.includesTransport);
+      if (updateUmrahPackageDto.includesGuide !== undefined)
+        umrahPackage.includesGuide = toBool(updateUmrahPackageDto.includesGuide);
+      if (updateUmrahPackageDto.isVip !== undefined)
+        umrahPackage.isVip = toBool(updateUmrahPackageDto.isVip);
+      if (updateUmrahPackageDto.isCustom !== undefined)
+        umrahPackage.isCustom = toBool(updateUmrahPackageDto.isCustom);
+
       return await umrahPackage.save();
     } catch (error: unknown) {
       if (error instanceof NotFoundException) throw error;
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new InternalServerErrorException(
         `Failed to update umrah package: ${message}`,
+      );
+    }
+  }
+
+  async updateFeatures(
+    id: string,
+    dto: UpdateUmrahPackageFeaturesDto,
+  ): Promise<UmrahPackageDocument> {
+    try {
+      const umrahPackage = await this.findOne(id);
+
+      if (dto.includesFlight !== undefined)
+        umrahPackage.includesFlight = toBool(dto.includesFlight);
+      if (dto.includesVisa !== undefined)
+        umrahPackage.includesVisa = toBool(dto.includesVisa);
+      if (dto.includesTransport !== undefined)
+        umrahPackage.includesTransport = toBool(dto.includesTransport);
+      if (dto.includesGuide !== undefined)
+        umrahPackage.includesGuide = toBool(dto.includesGuide);
+      if (dto.isVip !== undefined)
+        umrahPackage.isVip = toBool(dto.isVip);
+      if (dto.isCustom !== undefined)
+        umrahPackage.isCustom = toBool(dto.isCustom);
+
+      return await umrahPackage.save();
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) throw error;
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new InternalServerErrorException(
+        `Failed to update package features: ${message}`,
       );
     }
   }

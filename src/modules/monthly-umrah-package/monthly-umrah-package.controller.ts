@@ -27,6 +27,8 @@ import { RequireRole } from 'src/common/decorators/roles.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { multerImageOptions } from 'src/shared/cloudinary/multer.config';
 
+const MAX_PACKAGE_IMAGES = 20;
+
 @Controller('monthly-umrah-packages')
 export class MonthlyUmrahPackagesController {
   constructor(private readonly service: MonthlyUmrahPackagesService) {}
@@ -47,7 +49,7 @@ export class MonthlyUmrahPackagesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @RequireRole('admin')
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FilesInterceptor('images', 3, multerImageOptions))
+  @UseInterceptors(FilesInterceptor('images', MAX_PACKAGE_IMAGES, multerImageOptions))
   @SerializeResponse(MonthlyUmrahPackageResponseDto)
   async create(
     @Body() dto: CreateMonthlyUmrahPackageDto,
@@ -99,7 +101,7 @@ export class MonthlyUmrahPackagesController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @RequireRole('admin')
-  @UseInterceptors(FilesInterceptor('images', 3, multerImageOptions))
+  @UseInterceptors(FilesInterceptor('images', MAX_PACKAGE_IMAGES, multerImageOptions))
   @SerializeResponse(MonthlyUmrahPackageResponseDto)
   async update(
     @Param('id') id: string,
