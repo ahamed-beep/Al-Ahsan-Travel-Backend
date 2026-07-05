@@ -20,9 +20,9 @@ async function bootstrap() {
   app.enableCors(corsOptions);
 
   app.useGlobalFilters(
-  new AllExceptionsFilter(configService),  // configService pass karo
-  new HttpExceptionFilter(),
-);
+    new AllExceptionsFilter(configService),
+    new HttpExceptionFilter(),
+  );
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalPipes(
@@ -30,12 +30,8 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: false,
-      stopAtFirstError: false, // sab errors ek saath dekho
-      transformOptions: {
-        enableImplicitConversion: true, // <-- ye missing tha
-      },
+      stopAtFirstError: false,
       exceptionFactory: (errors) => {
-        // nested errors bhi flatten karo
         const flatten = (errs: any[], parent = ''): any[] =>
           errs.flatMap((e) => {
             const field = parent ? `${parent}.${e.property}` : e.property;

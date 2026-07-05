@@ -63,7 +63,7 @@ export class CreateMonthlyUmrahPackageDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(3)
+  @ArrayMaxSize(20)
   @ValidateNested({ each: true })
   @Type(() => CreatePackageItemDto)
   packages: CreatePackageItemDto[];

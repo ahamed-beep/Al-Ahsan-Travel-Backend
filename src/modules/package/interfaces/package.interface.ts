@@ -12,7 +12,6 @@ export interface IPackage {
   status: PackageStatus;
   imageUrl: string;
   imagePublicId: string;
-  description?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,7 +25,6 @@ export interface IPackageCreatePayload {
   tags?: string[];
   perPersonText?: string;
   status?: PackageStatus;
-  description?: string;
   imageBuffer: Buffer;
 }
 
@@ -39,6 +37,5 @@ export interface IPackageUpdatePayload {
   tags?: string[];
   perPersonText?: string;
   status?: PackageStatus;
-  description?: string;
   imageBuffer?: Buffer;
 }

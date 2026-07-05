@@ -35,9 +35,6 @@ export class Package {
 
   @Prop({ required: true })
   imagePublicId: string;
-
-  @Prop({ trim: true })
-  description?: string;
 }
 
 export const PackageSchema = SchemaFactory.createForClass(Package);
