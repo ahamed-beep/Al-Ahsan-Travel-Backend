@@ -52,9 +52,9 @@ export class CreateHajjInquiryDto {
   @Min(1)
   adults: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  children: number;
+  children?: number;
 }
