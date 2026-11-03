@@ -1,4 +1,7 @@
+import { HajjInquiryType } from '../enums/hajj-inquiry.enum';
+
 export const adminHajjInquiryTemplate = (data: {
+  inquiryType: HajjInquiryType;
   fullName: string;
   phoneNumber: string;
   packageType?: string;
@@ -7,13 +10,33 @@ export const adminHajjInquiryTemplate = (data: {
   departureAirport?: string;
   adults: number;
   children: number;
-}): string => `
+}): string => {
+  const isFlight = data.inquiryType === HajjInquiryType.FLIGHT;
+  const typeLabel = isFlight ? 'Only Flights' : 'Hajj';
+  const headerTitle = isFlight
+    ? 'New Flight Quote Request'
+    : 'New Shifting Hajj Quote Request';
+  const introText = isFlight
+    ? 'A new flight-only quote request has been submitted:'
+    : 'A new Hajj customization request has been submitted:';
+
+  const hotelCategoryRow = isFlight
+    ? ''
+    : `
+                <tr>
+                  <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                    <span style="color:#888;font-size:12px;display:block;">Hotel Category</span>
+                    <span style="color:#222;font-size:15px;">${data.hotelCategory ?? 'Not specified'}</span>
+                  </td>
+                </tr>`;
+
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>New Hajj Quote Request</title>
+  <title>${headerTitle}</title>
 </head>
 <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
@@ -24,7 +47,7 @@ export const adminHajjInquiryTemplate = (data: {
           <!-- Header -->
           <tr>
             <td style="background:#1C398E;padding:32px 40px;text-align:center;">
-              <h1 style="color:#ffffff;margin:0;font-size:22px;letter-spacing:1px;">New Shifting Hajj Quote Request</h1>
+              <h1 style="color:#ffffff;margin:0;font-size:22px;letter-spacing:1px;">${headerTitle}</h1>
             </td>
           </tr>
 
@@ -32,10 +55,16 @@ export const adminHajjInquiryTemplate = (data: {
           <tr>
             <td style="padding:40px;">
               <p style="color:#333;font-size:15px;margin:0 0 24px;font-weight:bold;">
-                A new Hajj customization request has been submitted:
+                ${introText}
               </p>
 
               <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                    <span style="color:#888;font-size:12px;display:block;">Inquiry Category</span>
+                    <span style="color:#1C398E;font-size:15px;font-weight:bold;">${typeLabel}</span>
+                  </td>
+                </tr>
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
                     <span style="color:#888;font-size:12px;display:block;">Full Name</span>
@@ -53,13 +82,7 @@ export const adminHajjInquiryTemplate = (data: {
                     <span style="color:#888;font-size:12px;display:block;">Package Type</span>
                     <span style="color:#222;font-size:15px;">${data.packageType ?? 'Not specified'}</span>
                   </td>
-                </tr>
-                <tr>
-                  <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
-                    <span style="color:#888;font-size:12px;display:block;">Hotel Category</span>
-                    <span style="color:#222;font-size:15px;">${data.hotelCategory ?? 'Not specified'}</span>
-                  </td>
-                </tr>
+                </tr>${hotelCategoryRow}
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
                     <span style="color:#888;font-size:12px;display:block;">Departure Date</span>
@@ -108,3 +131,4 @@ export const adminHajjInquiryTemplate = (data: {
 </body>
 </html>
 `;
+};

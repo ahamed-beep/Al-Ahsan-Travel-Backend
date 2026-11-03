@@ -24,6 +24,7 @@ import { AshraPackagesModule } from './modules/ashra-packages/ashra-packages.mod
 import { SpecialPackagesModule } from './modules/special-packages/special-packages.module';
 import { FlightDealsModule } from './modules/flight-deal/flight-deal.module';
 import { ContactModule } from './modules/contact/contact.module';
+import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ContactModule } from './modules/contact/contact.module';
     SpecialPackagesModule,
     FlightDealsModule,
     ContactModule,
+    BlogModule,
   ],
   controllers: [],
   providers: [

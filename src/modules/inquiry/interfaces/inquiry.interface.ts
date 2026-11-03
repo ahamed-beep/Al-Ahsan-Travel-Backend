@@ -1,4 +1,4 @@
-import { InquiryStatus } from '../enums/inquiry.enum';
+import { InquiryStatus, InquiryType } from '../enums/inquiry.enum';
 
 export interface IInquiry {
   _id: string;
@@ -6,6 +6,8 @@ export interface IInquiry {
   phone: string;
   departureDate?: string;
   departureAirport?: string;
+  inquiryType: InquiryType;
+  packageTier?: string;
   adults: number;
   children: number;
   status: InquiryStatus;
@@ -18,6 +20,8 @@ export interface IInquiryCreatePayload {
   phone: string;
   departureDate?: string;
   departureAirport?: string;
+  inquiryType: InquiryType;
+  packageTier?: string;
   adults: number;
   children: number;
 }

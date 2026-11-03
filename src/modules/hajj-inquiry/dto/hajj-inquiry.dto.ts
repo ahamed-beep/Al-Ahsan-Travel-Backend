@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { HajjInquiryStatus } from '../enums/hajj-inquiry.enum';
+import { HajjInquiryStatus, HajjInquiryType } from '../enums/hajj-inquiry.enum';
 
 export class HajjInquiryDto {
   @Expose()
@@ -23,6 +23,9 @@ export class HajjInquiryDto {
 
   @Expose()
   departureAirport: string;
+
+  @Expose()
+  inquiryType: HajjInquiryType;
 
   @Expose()
   adults: number;
