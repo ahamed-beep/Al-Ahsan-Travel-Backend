@@ -51,10 +51,19 @@ export class BlogService {
     return slug;
   }
 
+  private formatReadTime(minutes: number): string {
+    return `${minutes} min read`;
+  }
+
   private calcReadTime(body: string): string {
     const words = body.trim().split(/\s+/).length;
     const minutes = Math.max(1, Math.ceil(words / 200));
-    return `${minutes} min read`;
+    return this.formatReadTime(minutes);
+  }
+
+  // Manual value from the admin wins; otherwise calculate from the body
+  private resolveReadTime(minutes: number | undefined, body: string): string {
+    return minutes ? this.formatReadTime(minutes) : this.calcReadTime(body);
   }
 
   private escapeRegex(text: string): string {
@@ -67,7 +76,7 @@ export class BlogService {
     }
   }
 
-  // Cloudinary se image delete: fail ho to request fail nahi hoti, sirf log hota hai
+  // Deletes an image from Cloudinary. A failure is only logged, it never fails the request.
   private async safeDeleteImage(url?: string | null): Promise<void> {
     if (!url) return;
     try {
@@ -132,7 +141,7 @@ export class BlogService {
     };
   }
 
-  // Ek waqt me sirf ek featured blog
+  // Only one featured blog at a time
   private async unsetFeatured(exceptId?: string): Promise<void> {
     await this.blogModel.updateMany(
       { isFeatured: true, ...(exceptId ? { _id: { $ne: exceptId } } : {}) },
@@ -225,11 +234,13 @@ export class BlogService {
 
       if (dto.isFeatured) await this.unsetFeatured();
 
+      const { readTimeMinutes, ...rest } = dto;
+
       const blog = await this.blogModel.create({
-        ...dto,
+        ...rest,
         image: uploadedUrl,
         slug,
-        readTime: this.calcReadTime(dto.body),
+        readTime: this.resolveReadTime(readTimeMinutes, dto.body),
         publishedAt: dto.isPublished ? new Date() : null,
       });
 
@@ -239,7 +250,7 @@ export class BlogService {
         data: blog.toObject(),
       };
     } catch (error) {
-      // DB fail hua to Cloudinary par faltu image na reh jaye
+      // If the DB step failed, do not leave an orphan image on Cloudinary
       await this.safeDeleteImage(uploadedUrl);
 
       if (error instanceof HttpException) throw error;
@@ -258,7 +269,8 @@ export class BlogService {
       if (!existing) throw new NotFoundException('Blog not found');
 
       const oldImageUrl = existing.image;
-      const payload: Partial<Blog> = { ...dto };
+      const { readTimeMinutes, ...rest } = dto;
+      const payload: Partial<Blog> = { ...rest };
 
       if (file) {
         const upload = await this.cloudinaryService.uploadImageWebP(
@@ -272,7 +284,14 @@ export class BlogService {
       if (dto.title && dto.title !== existing.title) {
         payload.slug = await this.uniqueSlug(dto.title, id);
       }
-      if (dto.body) payload.readTime = this.calcReadTime(dto.body);
+
+      // Manual read time wins; otherwise recalculate when the body is sent
+      if (readTimeMinutes) {
+        payload.readTime = this.formatReadTime(readTimeMinutes);
+      } else if (dto.body) {
+        payload.readTime = this.calcReadTime(dto.body);
+      }
+
       if (dto.isPublished === true && !existing.publishedAt) {
         payload.publishedAt = new Date();
       }
@@ -283,12 +302,12 @@ export class BlogService {
         .lean<IBlog>()
         .exec();
 
-      // Update kamyab hua, ab purani image hata dein
+      // Update succeeded, now remove the old image
       if (newImageUrl) await this.safeDeleteImage(oldImageUrl);
 
       return { success: true, message: 'Blog updated successfully', data: updated };
     } catch (error) {
-      // Update fail hua to nayi upload hui image hata dein
+      // Update failed, remove the newly uploaded image
       await this.safeDeleteImage(newImageUrl);
 
       if (error instanceof HttpException) throw error;
