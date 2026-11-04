@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { HajjInquiryStatus } from '../enums/hajj-inquiry.enum';
+import { HajjInquiryStatus, HajjInquiryType } from '../enums/hajj-inquiry.enum';
 
 export type HajjInquiryDocument = HajjInquiry & Document;
 
@@ -23,6 +23,9 @@ export class HajjInquiry {
 
   @Prop({ trim: true })
   departureAirport?: string;
+
+  @Prop({ enum: HajjInquiryType, default: HajjInquiryType.HAJJ, index: true })
+  inquiryType: HajjInquiryType;
 
   @Prop({ required: true, min: 1 })
   adults: number;

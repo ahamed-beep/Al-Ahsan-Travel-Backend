@@ -6,8 +6,10 @@ import {
   Min,
   MaxLength,
   MinLength,
+  IsEnum,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import { InquiryType } from '../enums/inquiry.enum';
 
 export class CreateInquiryDto {
   @IsNotEmpty()
@@ -33,6 +35,16 @@ export class CreateInquiryDto {
   @MaxLength(100)
   @Transform(({ value }: { value: string }) => value?.trim())
   departureAirport?: string;
+
+  @IsNotEmpty()
+  @IsEnum(InquiryType)
+  inquiryType: InquiryType;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  @Transform(({ value }: { value: string }) => value?.trim())
+  packageTier?: string;
 
   @IsNotEmpty()
   @Type(() => Number)

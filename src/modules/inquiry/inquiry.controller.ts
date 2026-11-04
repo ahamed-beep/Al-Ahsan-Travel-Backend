@@ -6,14 +6,17 @@ import {
   Param,
   Body,
   Patch,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { InquiryService } from './inquiry.service';
 import { CreateInquiryDto } from './dto/create-inquiry.dto';
 import { InquiryDto, InquirySubmitResponseDto, SimpleInquiryResponseDto } from './dto/inquiry.dto';
+import { InquiryType } from './enums/inquiry.enum';
 import { ParseObjectIdPipe } from '../../common/pipes/parse-objectid.pipe';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -52,9 +55,24 @@ export class InquiryController {
   @UseGuards(JwtAuthGuard, RolesGuard, ActiveUserGuard)
   @RequireRole('admin')
   @HttpCode(HttpStatus.OK)
-  async findAll() {
+  async findAll(
+    @Query('inquiryType') inquiryType?: string,
+    @Query('search') search?: string,
+  ) {
     try {
-      const { data, total } = await this.inquiryService.findAll();
+      if (
+        inquiryType &&
+        !Object.values(InquiryType).includes(inquiryType as InquiryType)
+      ) {
+        throw new BadRequestException(
+          `inquiryType must be one of: ${Object.values(InquiryType).join(', ')}`,
+        );
+      }
+
+      const { data, total } = await this.inquiryService.findAll(
+        inquiryType as InquiryType | undefined,
+        search?.trim().slice(0, 100),
+      );
       return {
         success: true,
         total,

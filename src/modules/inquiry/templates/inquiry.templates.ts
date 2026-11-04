@@ -1,17 +1,36 @@
+import { InquiryType } from '../enums/inquiry.enum';
+
 export const adminInquiryTemplate = (data: {
+  inquiryType: InquiryType;
   fullName: string;
   phone: string;
   departureDate?: string;
   departureAirport?: string;
+  packageTier?: string;
   adults: number;
   children: number;
-}): string => `
+}): string => {
+  const isFlight = data.inquiryType === InquiryType.FLIGHT;
+  const typeLabel = isFlight ? 'Only Flights' : 'Umrah';
+  const headerTitle = isFlight ? 'New Flight Quote Request' : 'New Umrah Quote Request';
+
+  const packageTierRow = isFlight
+    ? ''
+    : `
+                <tr>
+                  <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                    <span style="color:#888;font-size:12px;display:block;">Hotel Category</span>
+                    <span style="color:#222;font-size:15px;">${data.packageTier ?? 'Not specified'}</span>
+                  </td>
+                </tr>`;
+
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>New Quote Request</title>
+  <title>${headerTitle}</title>
 </head>
 <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
@@ -22,7 +41,7 @@ export const adminInquiryTemplate = (data: {
           <!-- Header -->
           <tr>
             <td style="background:#1e3a8a;padding:32px 40px;text-align:center;">
-              <h1 style="color:#ffffff;margin:0;font-size:22px;letter-spacing:1px;">New Umrah Quote Request</h1>
+              <h1 style="color:#ffffff;margin:0;font-size:22px;letter-spacing:1px;">${headerTitle}</h1>
             </td>
           </tr>
 
@@ -36,6 +55,12 @@ export const adminInquiryTemplate = (data: {
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                    <span style="color:#888;font-size:12px;display:block;">Inquiry Category</span>
+                    <span style="color:#1e3a8a;font-size:15px;font-weight:bold;">${typeLabel}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
                     <span style="color:#888;font-size:12px;display:block;">Full Name</span>
                     <span style="color:#222;font-size:15px;font-weight:bold;">${data.fullName}</span>
                   </td>
@@ -45,7 +70,7 @@ export const adminInquiryTemplate = (data: {
                     <span style="color:#888;font-size:12px;display:block;">Phone Number</span>
                     <span style="color:#222;font-size:15px;">${data.phone}</span>
                   </td>
-                </tr>
+                </tr>${packageTierRow}
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
                     <span style="color:#888;font-size:12px;display:block;">Departure Date</span>
@@ -94,3 +119,4 @@ export const adminInquiryTemplate = (data: {
 </body>
 </html>
 `;
+};

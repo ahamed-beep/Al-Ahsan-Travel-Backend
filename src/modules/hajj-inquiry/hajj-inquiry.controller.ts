@@ -6,10 +6,12 @@ import {
   Param,
   Body,
   Patch,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { HajjInquiryService } from './hajj-inquiry.service';
 import { CreateHajjInquiryDto } from './dto/create-hajj-inquiry.dto';
@@ -18,6 +20,7 @@ import {
   HajjInquirySubmitResponseDto,
   SimpleHajjInquiryResponseDto,
 } from './dto/hajj-inquiry.dto';
+import { HajjInquiryType } from './enums/hajj-inquiry.enum';
 import { ParseObjectIdPipe } from '../../common/pipes/parse-objectid.pipe';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -56,9 +59,28 @@ export class HajjInquiryController {
   @UseGuards(JwtAuthGuard, RolesGuard, ActiveUserGuard)
   @RequireRole('admin')
   @HttpCode(HttpStatus.OK)
-  async findAll() {
+   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard, ActiveUserGuard)
+  @RequireRole('admin')
+  @HttpCode(HttpStatus.OK)
+  async findAll(
+    @Query('inquiryType') inquiryType?: string,
+    @Query('search') search?: string,
+  ) {
     try {
-      const { data, total } = await this.hajjInquiryService.findAll();
+      if (
+        inquiryType &&
+        !Object.values(HajjInquiryType).includes(inquiryType as HajjInquiryType)
+      ) {
+        throw new BadRequestException(
+          `inquiryType must be one of: ${Object.values(HajjInquiryType).join(', ')}`,
+        );
+      }
+
+      const { data, total } = await this.hajjInquiryService.findAll(
+        inquiryType as HajjInquiryType | undefined,
+        search?.trim().slice(0, 100),
+      );
       return {
         success: true,
         total,

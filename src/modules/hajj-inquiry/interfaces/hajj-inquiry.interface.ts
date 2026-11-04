@@ -1,4 +1,4 @@
-import { HajjInquiryStatus } from '../enums/hajj-inquiry.enum';
+import { HajjInquiryStatus, HajjInquiryType } from '../enums/hajj-inquiry.enum';
 
 export interface IHajjInquiry {
   _id: string;
@@ -8,6 +8,7 @@ export interface IHajjInquiry {
   hotelCategory?: string;
   departureDate?: string;
   departureAirport?: string;
+  inquiryType: HajjInquiryType;
   adults: number;
   children: number;
   status: HajjInquiryStatus;
@@ -22,6 +23,7 @@ export interface IHajjInquiryCreatePayload {
   hotelCategory?: string;
   departureDate?: string;
   departureAirport?: string;
+  inquiryType: HajjInquiryType;
   adults: number;
   children: number;
 }

@@ -5,10 +5,10 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, QueryFilter } from 'mongoose';
 import { HajjInquiry, HajjInquiryDocument } from './entities/hajj-inquiry.schema';
 import { CreateHajjInquiryDto } from './dto/create-hajj-inquiry.dto';
-import { HajjInquiryStatus } from './enums/hajj-inquiry.enum';
+import { HajjInquiryStatus, HajjInquiryType } from './enums/hajj-inquiry.enum';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from 'src/shared/mail/mail.service';
 import { adminHajjInquiryTemplate } from './template/hajj-inquiry.templates';
@@ -27,11 +27,14 @@ export class HajjInquiryService {
     try {
       const inquiry = await this.hajjInquiryModel.create(dto);
 
+      const typeLabel = dto.inquiryType === HajjInquiryType.FLIGHT ? 'Flight' : 'Hajj';
+
       const adminEmail = this.configService.get<string>('SMTP_USER');
       await this.mailService.sendMail({
         to: adminEmail,
-        subject: `New Hajj Quote Request — ${dto.fullName}`,
+        subject: `New ${typeLabel} Quote Request — ${dto.fullName}`,
         html: adminHajjInquiryTemplate({
+          inquiryType: dto.inquiryType,
           fullName: dto.fullName,
           phoneNumber: dto.phoneNumber,
           packageType: dto.packageType,
@@ -39,7 +42,7 @@ export class HajjInquiryService {
           departureDate: dto.departureDate,
           departureAirport: dto.departureAirport,
           adults: dto.adults,
-          children: dto.children,
+          children: dto.children ?? 0,
         }),
       });
 
@@ -51,11 +54,28 @@ export class HajjInquiryService {
     }
   }
 
-  async findAll(): Promise<{ data: HajjInquiry[]; total: number }> {
+    async findAll(
+    inquiryType?: HajjInquiryType,
+    search?: string,
+  ): Promise<{ data: HajjInquiry[]; total: number }> {
     try {
+         const filter: QueryFilter<HajjInquiryDocument> = {};
+      if (inquiryType) filter.inquiryType = inquiryType;
+
+      if (search) {
+        const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(escaped, 'i');
+        filter.$or = [
+          { fullName: regex },
+          { phoneNumber: regex },
+          { packageType: regex },
+          { departureAirport: regex },
+        ];
+      }
+
       const [data, total] = await Promise.all([
-        this.hajjInquiryModel.find().sort({ createdAt: -1 }),
-        this.hajjInquiryModel.countDocuments(),
+        this.hajjInquiryModel.find(filter).sort({ createdAt: -1 }),
+        this.hajjInquiryModel.countDocuments(filter),
       ]);
       return { data, total };
     } catch (error: unknown) {

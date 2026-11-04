@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { InquiryStatus } from '../enums/inquiry.enum';
+import { InquiryStatus, InquiryType } from '../enums/inquiry.enum';
 
 export class InquiryDto {
   @Expose()
@@ -17,6 +17,12 @@ export class InquiryDto {
 
   @Expose()
   departureAirport: string;
+
+  @Expose()
+  inquiryType: InquiryType;
+
+  @Expose()
+  packageTier: string;
 
   @Expose()
   adults: number;

@@ -6,8 +6,10 @@ import {
   Min,
   MaxLength,
   MinLength,
+  IsEnum,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import { HajjInquiryType } from '../enums/hajj-inquiry.enum';
 
 export class CreateHajjInquiryDto {
   @IsNotEmpty()
@@ -45,6 +47,10 @@ export class CreateHajjInquiryDto {
   @MaxLength(100)
   @Transform(({ value }: { value: string }) => value?.trim())
   departureAirport?: string;
+
+  @IsNotEmpty()
+  @IsEnum(HajjInquiryType)
+  inquiryType: HajjInquiryType;
 
   @IsNotEmpty()
   @Type(() => Number)
